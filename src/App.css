@@ -1,0 +1,33 @@
+.recipients {
+  font-family: monospace;
+}
+#logo {
+  height: 300px;
+  width: auto;
+}
+.section {
+  text-align: left;
+  max-width: 720px;
+  margin: 4rem auto auto;
+}
+
+
+.account,
+.allBalances,
+.allBurns {
+  display: flex;
+  flex-direction: column;
+}
+
+.addressList {
+  font-family: monospace;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.address {
+  margin-right: 15px;
+}
+
+@media screen and (max-width: 1450px) {
+}
