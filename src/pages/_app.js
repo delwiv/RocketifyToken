@@ -12,7 +12,6 @@ import '../App.css'
 
 let drizzle
 const DrizzleWrapper = ({ Component, pageProps, setAccount, setError }) => {
-  console.log('DrizzleWrapper', Component)
   if (!drizzle) {
     drizzle = new Drizzle(drizzleOptions)
   }
@@ -44,7 +43,6 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, setError }) => {
 const App = ({ Component, pageProps }) => {
   const [account, setAccount] = useState('')
   const [error, setError] = useState('')
-  console.log({ c: Component.name, h: Home.name })
   return (
     <ChakraProvider>
       <Head>
