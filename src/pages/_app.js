@@ -11,36 +11,33 @@ import '../App.css'
 
 let drizzle
 const DrizzleWrapper = ({ Component, pageProps, setAccount, setError }) => {
+  console.log('DrizzleWrapper', Component)
   if (!drizzle) {
     drizzle = new Drizzle(drizzleOptions)
   }
-  try {
-    return (
-      <DrizzleContext.Provider drizzle={drizzle}>
-        <DrizzleContext.Consumer>
-          {drizzleContext => {
-            try {
-              const { drizzle, drizzleState, initialized } = drizzleContext
+  return (
+    <DrizzleContext.Provider drizzle={drizzle}>
+      <DrizzleContext.Consumer>
+        {drizzleContext => {
+          try {
+            const { drizzle, drizzleState, initialized } = drizzleContext
 
-              if (!initialized) {
-                return 'Loading...'
-              }
-
-              setAccount(drizzleState.accounts[0])
-              return (
-                <Component {...pageProps} drizzle={drizzle} drizzleState={drizzleState} setError={setError} />
-              )
-            } catch (err) {
-              setError(err.message)
+            if (!initialized) {
+              return 'Loading...'
             }
-          }}
-        </DrizzleContext.Consumer>
-      </DrizzleContext.Provider>
 
-    )
-  } catch (err) {
-    setError(err.message)
-  }
+            setAccount(drizzleState.accounts[0])
+            return (
+              <Component {...pageProps} drizzle={drizzle} drizzleState={drizzleState} setError={setError} />
+            )
+          } catch (err) {
+            setError(err.message)
+          }
+        }}
+      </DrizzleContext.Consumer>
+    </DrizzleContext.Provider>
+
+  )
 }
 
 const App = ({ Component, pageProps }) => {
