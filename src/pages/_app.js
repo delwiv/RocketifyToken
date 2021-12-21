@@ -44,6 +44,7 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, setError }) => {
 const App = ({ Component, pageProps }) => {
   const [account, setAccount] = useState('')
   const [error, setError] = useState('')
+  console.log({ c: Component.name, h: Home.name })
   return (
     <ChakraProvider>
       <Head>
