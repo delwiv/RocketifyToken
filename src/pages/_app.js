@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { ChakraProvider, Container, Box } from '@chakra-ui/react'
 
 import TopNav from '../components/layout/TopNav.js'
+import Home from './index.js'
 
 import drizzleOptions from '../drizzleOptions'
 import '../App.css'
@@ -54,7 +55,7 @@ const App = ({ Component, pageProps }) => {
       <TopNav account={account} />
       <Container paddingTop='80px'>
         <Box>{error}</Box>
-        {Component.name === 'Home'
+        {Component.name === Home.name
           ? <Component {...pageProps} setError={setError} />
           : <DrizzleWrapper Component={Component} setError={setError} pageProps={pageProps} setAccount={setAccount} />}
       </Container>
