@@ -138,6 +138,12 @@ const DrizzleWrapper = ({
 
   const refreshAddresses = async () => {
     setLoading(true)
+    setMessage({
+      status: 'info',
+      title: 'Refreshing',
+      description: 'Fetching fresh info from the blockchain...',
+      duration: 3000,
+    })
     const [balances, burns, names, totalBurned, rockets] = await Promise.all([
       fetchAllBalances(),
       fetchAllBurns(),
@@ -152,6 +158,12 @@ const DrizzleWrapper = ({
     setTotalBurn(totalBurned)
     setMyBalance(rockets)
     setLoading(false)
+    setMessage({
+      status: 'success',
+      title: 'Success',
+      description: 'The app is up to date',
+      duration: 5000,
+    })
   }
   useEffect(() => {
     if (addresses.length) {
