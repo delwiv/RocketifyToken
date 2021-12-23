@@ -1,6 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  Heading,
+  Input,
+  Link,
+  Select,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  Text,
+} from '@chakra-ui/react'
 import { newContextComponents } from '@drizzle/react-components'
-import { Select, Flex, FormControl, Box, Text, Heading, Slider, SliderTrack, SliderFilledTrack, SliderThumb, SliderMark, Button, Input, Link } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 import Account from './Accout.js'
@@ -11,8 +26,19 @@ const { ContractData, ContractForm } = newContextComponents
 
 const creatorAddress = '0x624B2ED5B8005B036c71b75065E1b66Afa2b678D'
 
-export default (props) => {
-  const { refreshAddresses, isLoading, setLoading, RocketifyToken, account, accounts, drizzle, drizzleState, setError, myBalance } = props
+const RocketifyToken = (props) => {
+  const {
+    refreshAddresses,
+    isLoading,
+    setLoading,
+    RocketifyToken,
+    account,
+    accounts,
+    drizzle,
+    drizzleState,
+    setError,
+    myBalance,
+  } = props
 
   const [sendTo, setSendTo] = useState('')
   const [sendAmount, setSendAmount] = useState(0)
@@ -46,13 +72,27 @@ export default (props) => {
       <Box className='section'>
         <Heading size='md'>To get some test ether</Heading>
         <ul>
-          <li>go to <Link isExternal target='_blank' color='teal.500' href='https://faucets.chain.link/rinkeby' rel='noopener noreferrer'>https://faucets.chain.link/rinkeby <ExternalLinkIcon /> </Link></li>
-          <li>fill your address (<strong>{account}</strong>)</li>
           <li>
-            check the "0.1 test ETH" and complete the captcha
+            go to{' '}
+            <Link
+              isExternal
+              target='_blank'
+              color='teal.500'
+              href='https://faucets.chain.link/rinkeby'
+              rel='noopener noreferrer'
+            >
+              https://faucets.chain.link/rinkeby <ExternalLinkIcon />{' '}
+            </Link>
+          </li>
+          <li>
+            fill your address (<strong>{account}</strong>)
+          </li>
+          <li>
+            check the <strong>0.1 test ETH</strong> and complete the captcha
           </li>
         </ul>
-        That's it, you'll recieve your coins in seconds, then you can pay gaz to interact here.
+        That's it, you'll recieve your coins in seconds, then you can pay gaz to
+        interact here.
       </Box>
       <Box className='section'>
         <Heading size='lg'>1 - Claim welcome funds</Heading>
@@ -62,28 +102,55 @@ export default (props) => {
         <Button onClick={claim}>Claim</Button>
       </Box>
       <Box className='section'>
-
         <Heading size='lg'>2 - Send $ROCKET</Heading>
-        <Text>tip: creator's address <span className='monospace'>{creatorAddress}</span></Text>
-        <Text>tip: 15 $ROCKET = <span className='monospace'>{15 * 10 ** 18}</span></Text>
-        <Select placeholder='Choose an address' onChange={e => setSendTo(e.target.value)}>
-          {Object.keys(accounts).filter(addr => addr !== account).map(addr => (
-            <option value={addr}>{`${addr} | ${accounts[addr].name || 'Unkown'}`} </option>
-          ))}
+        <Text>
+          tip: creator's address{' '}
+          <span className='monospace'>{creatorAddress}</span>
+        </Text>
+        <Text>
+          tip: 15 $ROCKET = <span className='monospace'>{15 * 10 ** 18}</span>
+        </Text>
+        <Select
+          placeholder='Choose an address'
+          onChange={(e) => setSendTo(e.target.value)}
+        >
+          {Object.keys(accounts)
+            .filter((addr) => addr !== account)
+            .map((addr) => (
+              <option key={addr} value={addr}>
+                {`${addr} | ${accounts[addr].name || 'Unkown'}`}{' '}
+              </option>
+            ))}
         </Select>
-        <Select placeholder='Choose an amount' onChange={e => setSendAmount(e.target.value)}>
+        {/*
+         <Select placeholder='Choose an amount' onChange={e => setSendAmount(e.target.value)}>
           <option value={25 * 10 ** 18}>25 $ROCKET </option>
           <option value={50 * 10 ** 18}>50 $ROCKET </option>
           <option value={100 * 10 ** 18}>100 $ROCKET </option>
-        </Select>
-        <Slider onChange={val => setSendAmount(val)} defaultValue={15} min={0} max={weiToEther(myBalance)}>
+      </Select> */}
+        <Slider
+          onChange={(val) => setSendAmount(val)}
+          defaultValue={15}
+          min={0}
+          max={weiToEther(myBalance)}
+        >
           <SliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
             0
           </SliderMark>
-          <SliderMark value={weiToEther(myBalance) / 2} mt='1' ml='-2.5' fontSize='sm'>
+          <SliderMark
+            value={weiToEther(myBalance) / 2}
+            mt='1'
+            ml='-2.5'
+            fontSize='sm'
+          >
             {weiToEther(myBalance) / 2}
           </SliderMark>
-          <SliderMark value={weiToEther(myBalance)} mt='1' ml='-2.5' fontSize='sm'>
+          <SliderMark
+            value={weiToEther(myBalance)}
+            mt='1'
+            ml='-2.5'
+            fontSize='sm'
+          >
             {weiToEther(myBalance)}
           </SliderMark>
           <SliderMark
@@ -93,7 +160,6 @@ export default (props) => {
             color='white'
             zIndex={60000}
             marginTop={-35}
-
           >
             {sendAmount} $ROCKET
           </SliderMark>
@@ -122,3 +188,5 @@ export default (props) => {
     </div>
   )
 }
+
+export default RocketifyToken

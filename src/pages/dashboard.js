@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Dashboard from '../components/Dashboard.js'
 
-export default function Info (props) {
-  return (
-    <Dashboard {...props} />
-  )
+export default function Info(props) {
+  return <Dashboard {...props} />
 }

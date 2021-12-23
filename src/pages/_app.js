@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { DrizzleContext } from '@drizzle/react-plugin'
 import { Drizzle } from '@drizzle/store'
 import Head from 'next/head'
-import { ChakraProvider, Container, Box, useToast } from '@chakra-ui/react'
+import { Box, ChakraProvider, Container, useToast } from '@chakra-ui/react'
 
 import TopNav from '../components/layout/TopNav.js'
 import ConfigureWallet from '../components/ConfigureWallet.js'
@@ -11,7 +11,14 @@ import Home from './index.js'
 import drizzleOptions from '../drizzleOptions'
 import '../App.css'
 
-const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, setLoading }) => {
+const DrizzleWrapper = ({
+  Component,
+  pageProps,
+  setAccount,
+  account,
+  isLoading,
+  setLoading,
+}) => {
   const [ethBalance, setEthBalance] = useState(0)
   const [addressCount, setAddressCount] = useState(0)
   const [addresses, setAddresses] = useState([])
@@ -37,34 +44,55 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
     ethBalance,
     totalBurn,
     myBalance,
-    account
+    account,
   })
 
-  const getAddressCount = async () => Number(
-    await RocketifyToken.methods.getAddressCount().call()
-  )
-  const getAddresses = () => Promise.all(
-    new Array(addressCount)
-      .fill(1)
-      .map((_, i) => RocketifyToken.methods.getAddressByIndex(i).call())
-  )
+  const getAddressCount = async () =>
+    Number(await RocketifyToken.methods.getAddressCount().call())
+  const getAddresses = () =>
+    Promise.all(
+      new Array(addressCount)
+        .fill(1)
+        .map((_, i) => RocketifyToken.methods.getAddressByIndex(i).call())
+    )
   const fetchMyBalance = () => RocketifyToken.methods.getMyBalance().call()
   const fetchTotalBurn = () => RocketifyToken.methods.burnedAmount().call()
   const fetchEthBalance = () => drizzle.web3.eth.getBalance(account)
 
-  const fetchAllBalances = () => Promise.all(addresses.map(a => RocketifyToken.methods.balanceOf(a).call()))
-  const fetchAllBurns = () => Promise.all(addresses.map(a => RocketifyToken.methods.getBurnByAddress(a).call()))
-  const fetchAllNames = () => Promise.all(addresses.map(a => RocketifyToken.methods.userNames(a).call()))
+  const fetchAllBalances = () =>
+    Promise.all(
+      addresses.map((a) => RocketifyToken.methods.balanceOf(a).call())
+    )
+  const fetchAllBurns = () =>
+    Promise.all(
+      addresses.map((a) => RocketifyToken.methods.getBurnByAddress(a).call())
+    )
+  const fetchAllNames = () =>
+    Promise.all(
+      addresses.map((a) => RocketifyToken.methods.userNames(a).call())
+    )
 
-  const buildState = () => addresses.reduce((acc, cur, i) => {
-    acc.accounts[cur] = {
-      ...acc[cur],
-      balance: balances[i],
-      burnt: burns[i],
-      name: names[i]
-    }
-    return acc
-  }, { accounts: {}, totalSupply: 0, addressCount, ethBalance, totalBurn, myBalance, account })
+  const buildState = () =>
+    addresses.reduce(
+      (acc, cur, i) => {
+        acc.accounts[cur] = {
+          ...acc[cur],
+          balance: balances[i],
+          burnt: burns[i],
+          name: names[i],
+        }
+        return acc
+      },
+      {
+        accounts: {},
+        totalSupply: 0,
+        addressCount,
+        ethBalance,
+        totalBurn,
+        myBalance,
+        account,
+      }
+    )
 
   useEffect(() => {
     const onInit = async () => {
@@ -85,7 +113,7 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
         getAddressCount(),
         fetchEthBalance(),
         fetchTotalBurn(),
-        fetchMyBalance()
+        fetchMyBalance(),
       ])
       setAddressCount(addrCount)
       setEthBalance(balance)
@@ -114,7 +142,7 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
     const [balances, burns, names] = await Promise.all([
       fetchAllBalances(),
       fetchAllBurns(),
-      fetchAllNames()
+      fetchAllNames(),
     ])
 
     setBalances(balances)
@@ -142,7 +170,7 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
         duration: 10000,
         isClosable: true,
         position: 'top-right',
-        ...message
+        ...message,
       })
     }
   }, [message])
@@ -155,7 +183,7 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
         status: 'error',
         duration: 10000,
         isClosable: true,
-        position: 'top-right'
+        position: 'top-right',
       })
     }
   }, [error])
@@ -163,14 +191,12 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
   return (
     <DrizzleContext.Provider drizzle={drizzle}>
       <DrizzleContext.Consumer>
-        {drizzleContext => {
+        {(drizzleContext) => {
           try {
             const { drizzle, drizzleState, initialized } = drizzleContext
 
             if (!initialized) {
-              return (
-                <ConfigureWallet />
-              )
+              return <ConfigureWallet />
             }
             setInitialized(true)
 
@@ -184,19 +210,16 @@ const DrizzleWrapper = ({ Component, pageProps, setAccount, account, isLoading, 
               setLoading,
               isLoading,
               refreshAddresses,
-              setMessage
+              setMessage,
             }
 
-            return (
-              <Component {...props} />
-            )
+            return <Component {...props} />
           } catch (err) {
             setError(err.message)
           }
         }}
       </DrizzleContext.Consumer>
     </DrizzleContext.Provider>
-
   )
 }
 
@@ -209,7 +232,7 @@ const App = ({ Component, pageProps }) => {
     setAccount,
     Component,
     isLoading,
-    setLoading
+    setLoading,
   }
 
   return (
@@ -222,9 +245,11 @@ const App = ({ Component, pageProps }) => {
 
       <TopNav account={account} isLoading={isLoading} />
       <Container paddingTop='80px'>
-        {Component.name === Home.name
-          ? <Component {...pageProps} setError={setError} />
-          : <DrizzleWrapper {...props} />}
+        {Component.name === Home.name ? (
+          <Component {...props} />
+        ) : (
+          <DrizzleWrapper {...props} />
+        )}
       </Container>
       {/* <footer>
           Powered by{' '}

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import {
-  useColorMode,
-  Switch,
-  Flex,
   Button,
+  Flex,
+  IconButton,
   Image,
   Spinner,
-  IconButton
+  Switch,
+  useColorMode,
 } from '@chakra-ui/react'
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
+import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 
 export default ({ account, isLoading }) => {
@@ -31,73 +31,46 @@ export default ({ account, isLoading }) => {
           display={['none', 'none', 'flex', 'flex']}
         >
           <NextLink href='/'>
-            {isLoading
-              ? <Spinner />
-              : <Image src='/logo.svg' height='40px' />}
+            {isLoading ? <Spinner /> : <Image src='/logo.svg' height='40px' />}
           </NextLink>
           {/* Mobile */}
           <IconButton
             aria-label='Open Menu'
             size='lg'
             mr={2}
-            icon={
-              <HamburgerIcon />
-          }
+            icon={<HamburgerIcon />}
             onClick={() => changeDisplay('flex')}
             display={['flex', 'flex', 'none', 'none']}
           />
           {/* Desktop */}
           <Flex>
             <NextLink href='/'>
-              <Button
-                variant='ghost'
-                aria-label='Home'
-                my={5}
-                w='100%'
-              >
+              <Button variant='ghost' aria-label='Home' my={5} w='100%'>
                 Home
               </Button>
             </NextLink>
 
             <NextLink href='/dashboard'>
-              <Button
-                variant='ghost'
-                aria-label='Dashboard'
-                my={5}
-                w='100%'
-              >
+              <Button variant='ghost' aria-label='Dashboard' my={5} w='100%'>
                 Dashboard
               </Button>
             </NextLink>
 
             <NextLink href='/token'>
-              <Button
-                variant='ghost'
-                aria-label='ERC20 Token'
-                my={5}
-                w='100%'
-              >
+              <Button variant='ghost' aria-label='ERC20 Token' my={5} w='100%'>
                 ERC20 Token
               </Button>
             </NextLink>
 
             <NextLink href='/contact'>
-              <Button
-                variant='ghost'
-                aria-label='Contact'
-                my={5}
-                w='100%'
-              >
+              <Button variant='ghost' aria-label='Contact' my={5} w='100%'>
                 Contact
               </Button>
             </NextLink>
           </Flex>
         </Flex>
 
-        <Flex
-          justify='flex-end'
-          flex={1}
-        >
+        <Flex justify='flex-end' flex={1}>
           <Flex justify='space-between'>
             {account}
             <Switch
@@ -130,49 +103,26 @@ export default ({ account, isLoading }) => {
             mr={2}
             aria-label='Open Menu'
             size='lg'
-            icon={
-              <CloseIcon />
-            }
+            icon={<CloseIcon />}
             onClick={() => changeDisplay('none')}
           />
         </Flex>
 
-        <Flex
-          flexDir='column'
-          align='center'
-        >
+        <Flex flexDir='column' align='center'>
           <NextLink href='/' passHref>
-            <Button
-              as='a'
-              variant='ghost'
-              aria-label='Home'
-              my={5}
-              w='100%'
-            >
+            <Button as='a' variant='ghost' aria-label='Home' my={5} w='100%'>
               Home
             </Button>
           </NextLink>
 
           <NextLink href='/about' passHref>
-            <Button
-              as='a'
-              variant='ghost'
-              aria-label='About'
-              my={5}
-              w='100%'
-            >
+            <Button as='a' variant='ghost' aria-label='About' my={5} w='100%'>
               About
             </Button>
           </NextLink>
 
           <NextLink href='/contact' passHref>
-            <Button
-              as='a'
-              variant='ghost'
-              aria-label='Contact'
-              my={5}
-              w='100%'
-            >
+            <Button as='a' variant='ghost' aria-label='Contact' my={5} w='100%'>
               Contact
             </Button>
           </NextLink>

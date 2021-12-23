@@ -1,2 +1,31 @@
 {
+  "extends": ["react", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "space-before-function-paren": 0,
+    "curly": ["error", "all"],
+    "sort-imports": [
+      "error",
+      {
+        "allowSeparatedGroups": true,
+        "ignoreDeclarationSort": true
+      }
+    ],
+    "react/jsx-uses-react": 1,
+    "no-unused-vars": "warn",
+    "react/prop-types": 0,
+    "react/no-unescaped-entities": 0
+  },
+  "parserOptions": {
+    "sourcetype": "module",
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true
+  },
+  "parser": "@typescript-eslint/parser"
 }

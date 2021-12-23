@@ -1,7 +1,7 @@
 import RocketifyToken from './contracts/RocketifyToken.json'
 
 const options = {
-  contracts: [RocketifyToken]
+  contracts: [RocketifyToken],
 }
 
 export default options
