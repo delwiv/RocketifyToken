@@ -5,12 +5,13 @@ import {
   Flex,
   Button,
   Image,
+  Spinner,
   IconButton
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 
-export default ({ account }) => {
+export default ({ account, isLoading }) => {
   const { colorMode, toggleColorMode } = useColorMode()
   const isDark = colorMode === 'dark'
   const [display, changeDisplay] = useState('none')
@@ -30,7 +31,9 @@ export default ({ account }) => {
           display={['none', 'none', 'flex', 'flex']}
         >
           <NextLink href='/'>
-            <Image src='/logo.svg' height='40px' />
+            {isLoading
+              ? <Spinner />
+              : <Image src='/logo.svg' height='40px' />}
           </NextLink>
           {/* Mobile */}
           <IconButton

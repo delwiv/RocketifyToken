@@ -1,39 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import { newContextComponents } from '@drizzle/react-components'
+import { Box, Text, Heading, FormControl, Flex, Input, Button, Spinner } from '@chakra-ui/react'
 
 import { weiToEther } from '../utils/format.js'
 
-const { AccountData, ContractData } = newContextComponents
-
-export default ({ drizzle, drizzleState }) => {
-  const address = drizzleState.accounts[0]
-  const [ethBalance, setEthBalance] = useState(0)
-
-  const fetchEthBalance = () => drizzle.web3.eth.getBalance(address)
-  useEffect(() => {
-    fetchEthBalance().then(setEthBalance)
-  }, [])
+export default ({ setError, account, ethBalance, myBalance, accounts, setMessage, RocketifyToken, setLoading, refreshAddresses }) => {
+  const fullAccount = accounts[account] || { name: '', burnt: 0 }
+  const [name, setName] = useState(fullAccount.name)
+  const sendSetUsername = async () => {
+    try {
+      setLoading(true)
+      await RocketifyToken.methods.setName(name).send()
+      setLoading(false)
+      setMessage({
+        title: `Hello ${name} :-)`,
+        description: 'Your name has been successfuly set',
+        status: 'success'
+      })
+      refreshAddresses()
+    } catch (error) {
+      setError(error.message)
+      setLoading(false)
+    }
+  }
   return (
-    <div className='account'>
-      <h2>Account</h2>
-      {address}
-      <div>{weiToEther(ethBalance).toFixed(10)} $ETHEREUM</div>
-      <ContractData
-        drizzle={drizzle}
-        drizzleState={drizzleState}
-        contract='RocketifyToken'
-        method='getMyBalance'
-        render={data => ` ${weiToEther(data)} $ROCKET`}
-      />
-      <h3>Burnt</h3>
-      <ContractData
-        drizzle={drizzle}
-        drizzleState={drizzleState}
-        contract='RocketifyToken'
-        method='burnByAddress'
-        methodArgs={[address]}
-        render={data => ` ${weiToEther(data)} $ROCKET`}
-      />
-    </div>
+    <>
+      <Heading size='lg'>Account </Heading>
+      <Heading size='md'>{fullAccount.name && `Custom name : ${fullAccount.name}`}</Heading>
+      <Heading size='sm' className='monospace'>{account}</Heading>
+      <FormControl>
+        <Heading size='md'>Want to set or change your username ?</Heading>
+        <Flex>
+          <Input flex={1} name='name' placeholder='Name' onChange={e => setName(e.target.value)} />
+          <Button onClick={() => sendSetUsername()}>Set name</Button>
+        </Flex>
+      </FormControl>
+
+      <Text>{weiToEther(ethBalance).toFixed(10)} $ETHEREUM</Text>
+      <Text>{weiToEther(myBalance).toFixed(10)} $ROCKET</Text>
+
+      <Heading size='md'>Burnt</Heading>
+      <Text>{weiToEther(fullAccount.burnt)} $ROCKET</Text>
+    </>
   )
 }

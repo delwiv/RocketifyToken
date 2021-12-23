@@ -1,4 +1,5 @@
-.recipients {
+.recipients,
+.monospace {
   font-family: monospace;
 }
 #logo {
