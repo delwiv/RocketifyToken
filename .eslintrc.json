@@ -15,7 +15,9 @@
     "react/jsx-uses-react": 1,
     "no-unused-vars": "warn",
     "react/prop-types": 0,
-    "react/no-unescaped-entities": 0
+    "react/no-unescaped-entities": 0,
+    "react/react-in-jsx-scope": 0,
+    "prefer-reflect": 0
   },
   "parserOptions": {
     "sourcetype": "module",
@@ -25,7 +27,17 @@
     }
   },
   "env": {
-    "es6": true
+    "es6": true,
+    "browser": true,
+    "node": true
   },
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": ["**/*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }
