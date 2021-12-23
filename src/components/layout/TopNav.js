@@ -62,9 +62,9 @@ export default ({ account, isLoading }) => {
               </Button>
             </NextLink>
 
-            <NextLink href='/contact'>
-              <Button variant='ghost' aria-label='Contact' my={5} w='100%'>
-                Contact
+            <NextLink href='/help'>
+              <Button variant='ghost' aria-label='Help' my={5} w='100%'>
+                Help
               </Button>
             </NextLink>
           </Flex>

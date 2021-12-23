@@ -5,8 +5,8 @@ import Head from 'next/head'
 import { Box, ChakraProvider, Container, useToast } from '@chakra-ui/react'
 
 import TopNav from '../components/layout/TopNav.js'
-import ConfigureWallet from '../components/ConfigureWallet.js'
 import Home from './index.js'
+import Help from './help.js'
 
 import drizzleOptions from '../drizzleOptions'
 import '../App.css'
@@ -130,7 +130,6 @@ const DrizzleWrapper = ({
     const onAddressCount = async () => {
       setLoading(true)
       const addresses = await getAddresses()
-      console.log({ addresses })
       setAddresses(addresses)
       setLoading(false)
     }
@@ -139,15 +138,19 @@ const DrizzleWrapper = ({
 
   const refreshAddresses = async () => {
     setLoading(true)
-    const [balances, burns, names] = await Promise.all([
+    const [balances, burns, names, totalBurned, rockets] = await Promise.all([
       fetchAllBalances(),
       fetchAllBurns(),
       fetchAllNames(),
+      fetchTotalBurn(),
+      fetchMyBalance(),
     ])
 
     setBalances(balances)
     setBurns(burns)
     setNames(names)
+    setTotalBurn(totalBurned)
+    setMyBalance(rockets)
     setLoading(false)
   }
   useEffect(() => {
@@ -158,7 +161,7 @@ const DrizzleWrapper = ({
 
   useEffect(() => {
     setBlockchainState(buildState())
-  }, [balances, burns, names, addresses])
+  }, [balances, burns, names, addresses, totalBurn, myBalance])
 
   useEffect(() => {
     if (message.description) {
@@ -196,7 +199,7 @@ const DrizzleWrapper = ({
             const { drizzle, drizzleState, initialized } = drizzleContext
 
             if (!initialized) {
-              return <ConfigureWallet />
+              return 'Loading...'
             }
             setInitialized(true)
 
@@ -245,7 +248,7 @@ const App = ({ Component, pageProps }) => {
 
       <TopNav account={account} isLoading={isLoading} />
       <Container paddingTop='80px'>
-        {Component.name === Home.name ? (
+        {[Home.name, Help.name].includes(Component.name) ? (
           <Component {...props} />
         ) : (
           <DrizzleWrapper {...props} />
