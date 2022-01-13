@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   Flex,
@@ -6,15 +7,90 @@ import {
   Image,
   Spinner,
   Switch,
+  Text,
   useColorMode,
 } from '@chakra-ui/react'
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 
-export default ({ account, isLoading }) => {
+import { setBadChainId } from '../../store/actions/app.js'
+import {
+  CHAIN_ID,
+  changeChainId,
+  connectWeb3,
+  loadContractData,
+  loadTokenContract,
+  reloadData,
+  setState,
+} from '../../store/actions/web3.js'
+
+export default ({ setError }) => {
+  const dispatch = useDispatch()
   const { colorMode, toggleColorMode } = useColorMode()
   const isDark = colorMode === 'dark'
   const [display, changeDisplay] = useState('none')
+
+  const { loading, badChainId } = useSelector((state) => state.app)
+  const {
+    context: { account },
+    eth,
+    rocket,
+    tokenContract,
+    dataLoaded,
+  } = useSelector((state) => state.web3)
+
+  const web3Context = useWeb3React()
+
+  useEffect(() => {
+    dispatch(setState('context', web3Context))
+
+    if (account !== web3Context.account && dataLoaded) {
+      dispatch(reloadData())
+    }
+  }, [web3Context])
+
+  const { deactivate, chainId, error, active } = web3Context
+
+  const connect = async () => {
+    dispatch(connectWeb3())
+  }
+
+  useEffect(() => {
+    if (!chainId) {
+      return
+    }
+    console.log({ chainId })
+    if (chainId !== CHAIN_ID) {
+      dispatch(setBadChainId(true))
+    } else {
+      dispatch(setBadChainId(false))
+    }
+  }, [chainId])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    if (error instanceof UnsupportedChainIdError) {
+      return setBadChainId(true)
+    }
+    setError(error.message)
+  }, [error])
+
+  useEffect(() => {
+    if (!web3Context.active) {
+      return
+    }
+    dispatch(loadTokenContract())
+  }, [web3Context.active])
+
+  useEffect(() => {
+    if (!tokenContract) {
+      return
+    }
+    dispatch(loadContractData())
+  }, [tokenContract])
   return (
     <Flex id='navbar'>
       <Flex
@@ -31,7 +107,7 @@ export default ({ account, isLoading }) => {
           display={['none', 'none', 'flex', 'flex']}
         >
           <NextLink href='/'>
-            {isLoading ? <Spinner /> : <Image src='/logo.svg' height='40px' />}
+            {loading ? <Spinner /> : <Image src='/logo.svg' height='40px' />}
           </NextLink>
           {/* Mobile */}
           <IconButton
@@ -50,29 +126,51 @@ export default ({ account, isLoading }) => {
               </Button>
             </NextLink>
 
-            <NextLink href='/dashboard'>
+            {/*<NextLink href='/dashboard'>
               <Button variant='ghost' aria-label='Dashboard' my={5} w='100%'>
                 Dashboard
               </Button>
             </NextLink>
 
-            <NextLink href='/token'>
-              <Button variant='ghost' aria-label='ERC20 Token' my={5} w='100%'>
-                ERC20 Token
-              </Button>
-            </NextLink>
 
+            {/*<NextLink href='/bookmaker'>
+              <Button variant='ghost' aria-label='Bookmaker' my={5} w='100%'>
+                Bookmaker
+              </Button>
+            </NextLink>*/}
             <NextLink href='/help'>
               <Button variant='ghost' aria-label='Help' my={5} w='100%'>
                 Help
+              </Button>
+            </NextLink>
+            <NextLink href='/token'>
+              <Button variant='ghost' aria-label='ERC20 Token' my={5} w='100%'>
+                ERC20
               </Button>
             </NextLink>
           </Flex>
         </Flex>
 
         <Flex justify='flex-end' flex={1}>
-          <Flex justify='space-between'>
-            {account}
+          <Flex justify='space-between' align='center'>
+            {badChainId && (
+              <Button onClick={() => dispatch(changeChainId())}>
+                Use Rinkeby
+              </Button>
+            )}
+            <Text>Connected : {account}</Text>
+            <Text>{`Total supply : $ROCKET ${(
+              rocket.totalSupply /
+              10 ** 18
+            ).toFixed(2)}`}</Text>
+            <Text>{`Total burnt : $ROCKET ${(
+              rocket.totalBurnt /
+              10 ** 18
+            ).toFixed(2)}`}</Text>
+            <Text>$ETH {`${parseFloat(eth.balance).toFixed(2)}`}</Text>
+            <Text>$ROCKET {`${rocket.balance / 10 ** 18}`}</Text>
+            {active && <Button onClick={() => deactivate()}>Disconnect</Button>}
+            {!active && <Button onClick={connect}>Connect</Button>}
             <Switch
               color='green'
               isChecked={isDark}

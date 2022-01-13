@@ -17,11 +17,18 @@ import {
 
 import { weiToEther } from '../utils/format.js'
 
-export default function AmountPicker({ onChange, value, myBalance }) {
+export default function AmountPicker({
+  onChange,
+  value,
+  myBalance,
+  step,
+  currency = '$ROCKET',
+}) {
   return (
     <>
       <Slider
         marginTop={45}
+        step={step || 0.1}
         onChange={(val) => onChange(val)}
         defaultValue={0}
         min={0}
@@ -54,7 +61,7 @@ export default function AmountPicker({ onChange, value, myBalance }) {
           zIndex={100}
           marginTop={-45}
         >
-          {value} $ROCKET
+          {value} {currency}
         </SliderMark>
         <SliderTrack bg='red.100'>
           <Box position='relative' right={10} />

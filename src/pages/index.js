@@ -1,9 +1,9 @@
-import { Box, Heading, Link, Text } from '@chakra-ui/react'
+import { Box, Container, Heading, Link, Text } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 export default function Home(props) {
   return (
-    <>
+    <Box className='section'>
       <Heading>Delwiv's Web3 Lab</Heading>
       <Box>
         <Text>
@@ -14,6 +14,6 @@ export default function Home(props) {
           </Link>
         </Text>
       </Box>
-    </>
+    </Box>
   )
 }
