@@ -141,10 +141,10 @@ export const getAddressCount = () => async (dispatch, getState) => {
 
 export const fetchTotalBurn = () => async (dispatch, getState) => {
   dispatch(setLoading(true))
-  const { tokenContract } = getState().web3
+  const { tokenContract, rocket } = getState().web3
   const totalBurnt = await tokenContract.methods.burnedAmount().call()
 
-  dispatch(setState('totalBurnt', totalBurnt))
+  dispatch(setState('rocket', { ...rocket, totalBurnt }))
 }
 
 export const loadTokenData = () => async (dispatch, getState) => {

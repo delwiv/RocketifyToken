@@ -21,10 +21,7 @@
   },
   "parserOptions": {
     "sourcetype": "module",
-    "requireConfigFile": false,
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "requireConfigFile": false
   },
   "env": {
     "es6": true,

@@ -10,8 +10,7 @@ const initialState = {
     balance: 0,
   },
   rocket: {
-    balance: 0,
-    burnt: 0,
+    totalBurnt: 0,
     totalSupply: 0,
     addressCount: 0,
     addresses: {},

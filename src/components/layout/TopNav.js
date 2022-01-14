@@ -14,6 +14,7 @@ import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 
+import NetworkSwitcher from '../utils/NetworkSwitcher.js'
 import { setBadChainId } from '../../store/actions/app.js'
 import {
   CHAIN_ID,
@@ -33,7 +34,7 @@ export default ({ setError }) => {
 
   const { loading, badChainId } = useSelector((state) => state.app)
   const {
-    context: { account },
+    context: { account, deactivate, chainId, error, active },
     eth,
     rocket,
     tokenContract,
@@ -50,8 +51,6 @@ export default ({ setError }) => {
     }
   }, [web3Context])
 
-  const { deactivate, chainId, error, active } = web3Context
-
   const connect = async () => {
     dispatch(connectWeb3())
   }
@@ -60,7 +59,6 @@ export default ({ setError }) => {
     if (!chainId) {
       return
     }
-    console.log({ chainId })
     if (chainId !== CHAIN_ID) {
       dispatch(setBadChainId(true))
     } else {
@@ -73,7 +71,7 @@ export default ({ setError }) => {
       return
     }
     if (error instanceof UnsupportedChainIdError) {
-      return setBadChainId(true)
+      return dispatch(setBadChainId(true))
     }
     setError(error.message)
   }, [error])
@@ -154,23 +152,25 @@ export default ({ setError }) => {
         <Flex justify='flex-end' flex={1}>
           <Flex justify='space-between' align='center'>
             {badChainId && (
-              <Button onClick={() => dispatch(changeChainId())}>
-                Use Rinkeby
-              </Button>
+              <NetworkSwitcher onSubmit={() => dispatch(changeChainId())} />
             )}
             <Text>Connected : {account}</Text>
-            <Text>{`Total supply : $ROCKET ${(
-              rocket.totalSupply /
-              10 ** 18
-            ).toFixed(2)}`}</Text>
-            <Text>{`Total burnt : $ROCKET ${(
-              rocket.totalBurnt /
-              10 ** 18
-            ).toFixed(2)}`}</Text>
-            <Text>$ETH {`${parseFloat(eth.balance).toFixed(2)}`}</Text>
-            <Text>$ROCKET {`${rocket.balance / 10 ** 18}`}</Text>
+            {!badChainId && (
+              <>
+                <Text>{`Total supply : $ROCKET ${(
+                  rocket.totalSupply /
+                  10 ** 18
+                ).toFixed(2)}`}</Text>
+                <Text>{`Total burnt : $ROCKET ${(
+                  rocket.totalBurnt /
+                  10 ** 18
+                ).toFixed(2)}`}</Text>
+                <Text>$ETH {`${parseFloat(eth.balance).toFixed(2)}`}</Text>
+                <Text>$ROCKET {`${rocket.balance / 10 ** 18}`}</Text>
+                {!active && <Button onClick={connect}>Connect</Button>}
+              </>
+            )}
             {active && <Button onClick={() => deactivate()}>Disconnect</Button>}
-            {!active && <Button onClick={connect}>Connect</Button>}
             <Switch
               color='green'
               isChecked={isDark}

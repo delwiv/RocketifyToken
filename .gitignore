@@ -31,3 +31,4 @@ app/src/contracts
 .env
 .openzeppelin
 .next
+src/contracts
