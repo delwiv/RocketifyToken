@@ -1,7 +1,9 @@
 import { Box, Heading, Link, Text } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-export default function Help({ account }) {
+export default function Help() {
+  const account = useSelector((state) => state.web3.context.account)
   return (
     <Box className='section'>
       <Heading size='md'>To get some test ether</Heading>

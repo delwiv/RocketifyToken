@@ -9,6 +9,7 @@ import { Provider } from 'react-redux'
 
 import configureStore from '../store/configureStore.js'
 import TopNav from '../components/layout/TopNav.js'
+import Footer from '../components/layout/Footer.js'
 
 import '../App.css'
 
@@ -49,6 +50,7 @@ const Dapp = ({ Component, pageProps }) => {
       <Box paddingTop='80px'>
         <Component {...pageProps} />
       </Box>
+      <Footer />
     </>
   )
 }
