@@ -3,14 +3,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   IconButton,
   Image,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  Spacer,
   Spinner,
   Switch,
   Text,
+  Tooltip,
   useColorMode,
 } from '@chakra-ui/react'
-import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, CloseIcon, HamburgerIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 
@@ -25,6 +36,15 @@ import {
   reloadData,
   setState,
 } from '../../store/actions/web3.js'
+
+const InfoItem = ({ label, value }) => (
+  <MenuItem>
+    <Flex justifyContent='space-between' flex={1}>
+      <Text>{label}</Text>
+      <Text>{value}</Text>
+    </Flex>
+  </MenuItem>
+)
 
 export default ({ setError }) => {
   const dispatch = useDispatch()
@@ -154,29 +174,60 @@ export default ({ setError }) => {
             {badChainId && (
               <NetworkSwitcher onSubmit={() => dispatch(changeChainId())} />
             )}
-            <Text>Connected : {account}</Text>
             {!badChainId && (
-              <>
-                <Text>{`Total supply : $ROCKET ${(
-                  rocket.totalSupply /
-                  10 ** 18
-                ).toFixed(2)}`}</Text>
-                <Text>{`Total burnt : $ROCKET ${(
-                  rocket.totalBurnt /
-                  10 ** 18
-                ).toFixed(2)}`}</Text>
-                <Text>$ETH {`${parseFloat(eth.balance).toFixed(2)}`}</Text>
-                <Text>$ROCKET {`${rocket.balance / 10 ** 18}`}</Text>
-                {!active && <Button onClick={connect}>Connect</Button>}
-              </>
+              <>{!active && <Button onClick={connect}>Connect</Button>}</>
             )}
-            {active && <Button onClick={() => deactivate()}>Disconnect</Button>}
-            <Switch
-              color='green'
-              isChecked={isDark}
-              paddingLeft='2em'
-              onChange={toggleColorMode}
-            />
+            <Menu closeOnSelect={false}>
+              {account && (
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  {account.slice(0, 8)}...
+                </MenuButton>
+              )}
+              <MenuList>
+                <MenuGroup title='Wallet'>
+                  <InfoItem
+                    label='$ETHEREUM'
+                    value={parseFloat(eth.balance).toFixed(2)}
+                  />
+                  <InfoItem label='$ROCKET' value={rocket.balance / 10 ** 18} />
+                </MenuGroup>
+                <MenuGroup title='$ROCKET stats'>
+                  <InfoItem
+                    label='Total supply'
+                    value={(rocket.totalSupply / 10 ** 18).toFixed(2)}
+                  />
+                  <InfoItem
+                    label='Total burnt'
+                    value={(rocket.totalBurnt / 10 ** 18).toFixed(2)}
+                  />
+                </MenuGroup>
+                <MenuItem>
+                  <FormControl display='flex' alignItems='center'>
+                    <FormLabel htmlFor='themeSwitcher' mb='0'>
+                      Use dark theme ?
+                    </FormLabel>
+                    <Switch
+                      color='green'
+                      isChecked={isDark}
+                      paddingLeft='2em'
+                      onChange={toggleColorMode}
+                    />
+                  </FormControl>
+                </MenuItem>
+                <MenuItem>
+                  {active && (
+                    <Button
+                      onClick={() => {
+                        deactivate()
+                        location.reload()
+                      }}
+                    >
+                      Disconnect
+                    </Button>
+                  )}
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </Flex>
       </Flex>

@@ -70,7 +70,7 @@ const App = ({ Component, pageProps }) => {
   return (
     <ChakraProvider>
       <Head>
-        <title>Web3 Stuff | {Component.name}</title>
+        <title>Delwiv's Web3 Stuff</title>
         <meta name='description' content="Delwiv's Web3 playground" />
         <link rel='icon' href='/logo.svg' />
       </Head>
