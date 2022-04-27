@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Head from 'next/head'
 import { Web3ReactProvider } from '@web3-react/core'
-import { Box, ChakraProvider, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  ChakraProvider,
+  Flex,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react'
 import { formatEther } from '@ethersproject/units'
 import { Web3Provider } from '@ethersproject/providers'
 import { Provider } from 'react-redux'
@@ -44,13 +50,20 @@ const Dapp = ({ Component, pageProps }) => {
       })
     }
   }, [error])
+
+  const bg = useColorModeValue('white', 'gray.800')
   return (
     <>
-      <TopNav {...pageProps} />
-      <Box paddingTop='80px'>
+      <TopNav {...pageProps} bg={bg} />
+      <Box
+        paddingTop='80px'
+        paddingBottom='80px'
+        paddingRight='1em'
+        paddingLeft='1em'
+      >
         <Component {...pageProps} />
       </Box>
-      <Footer />
+      <Footer bg={bg} />
     </>
   )
 }

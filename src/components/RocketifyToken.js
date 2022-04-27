@@ -129,104 +129,118 @@ const RocketifyToken = (props) => {
     }
   }
   const username = rocket.addresses[account]?.name
+  console.log({ account })
   return (
     <div>
-      {parseFloat(eth.balance) === 0 && (
-        <Box className='sidebar section'>
-          <Heading size='lg'>You don't have any Ether</Heading>
+      {!account ? (
+        <Box className='section'>
+          <Heading size='lg'>You are note connected</Heading>
+          <Text>Please click on the Connect button in top right</Text>
+        </Box>
+      ) : (
+        <>
+          {parseFloat(eth.balance) === 0 && (
+            <Box className='sidebar section'>
+              <Heading size='lg'>You don't have any Ether</Heading>
 
-          <Text>
-            Head over to{' '}
-            <Link
-              isExternal
-              target='_blank'
-              color='teal.500'
-              href='https://faucets.chain.link/rinkeby'
-              rel='noopener noreferrer'
+              <Text>
+                Head over to{' '}
+                <Link
+                  isExternal
+                  target='_blank'
+                  color='teal.500'
+                  href='https://faucets.chain.link/rinkeby'
+                  rel='noopener noreferrer'
+                >
+                  https://faucets.chain.link/rinkeby <ExternalLinkIcon />
+                </Link>
+              </Text>
+            </Box>
+          )}
+          <Box className='sidebar section'>
+            <Heading size='lg'>
+              {!username ? 'Choose a display name' : `Hello ${username}`}
+            </Heading>
+
+            <Input
+              onChange={(e) => setName(e.target.value)}
+              placeholder={username || 'Your name'}
+              value={name}
+            />
+            <Button onClick={setUsername}>{username ? 'Update' : 'Set'}</Button>
+          </Box>
+          <Box className='section'>
+            <Heading size='lg'>1 - Claim welcome funds</Heading>
+            <p>You need to own less than 100 $ROCKET</p>
+            <p>(You own {weiToEther(rocket.balance)} $ROCKET)</p>
+
+            <Button
+              disabled={weiToEther(rocket.balance) >= 100}
+              onClick={claim}
             >
-              https://faucets.chain.link/rinkeby <ExternalLinkIcon />
-            </Link>
-          </Text>
-        </Box>
-      )}
-      <>
-        <Box className='sidebar section'>
-          <Heading size='lg'>
-            {!username ? 'Choose a display name' : `Hello ${username}`}
-          </Heading>
-
-          <Input onChange={(e) => setName(e.target.value)} value={name} />
-          <Button onClick={setUsername}>Set</Button>
-        </Box>
-        <Box className='section'>
-          <Heading size='lg'>1 - Claim welcome funds</Heading>
-          <p>You need to own less than 100 $ROCKET</p>
-          <p>(You own {weiToEther(rocket.balance)} $ROCKET)</p>
-
-          <Button disabled={weiToEther(rocket.balance) >= 100} onClick={claim}>
-            Claim
-          </Button>
-        </Box>
-        <Box className='section'>
-          <Heading size='lg'>2 - Send $ROCKET</Heading>
-          <Select
-            placeholder='Choose an address'
-            onChange={(e) => setSendTo(e.target.value)}
-          >
-            {rocket.addressesRaw.map((address) => (
-              <option value={address} key={address}>
-                {address} - {rocket.addresses[address].name}
-              </option>
-            ))}
-          </Select>
-          <AmountPicker
-            onChange={setSendAmount}
-            value={sendAmount}
-            myBalance={rocket.balance}
-          />
-          <Button onClick={send}>Send !</Button>
-        </Box>
-
-        <Box className='section'>
-          <Heading size='lg'>3 - Burn some $ROCKET</Heading>
-          <p>
-            Have no friend ? You can burn your tokens to, maybe claim more ?
-          </p>
-
-          <AmountPicker
-            onChange={setBurnAmount}
-            value={burnAmount}
-            myBalance={rocket.balance}
-          />
-          <Button onClick={burn}>Burn !</Button>
-        </Box>
-        <Box className='section'>
-          <Heading size='lg'>4 - Holders</Heading>
-          <p>Here are some infos about holders</p>
-
-          <Table>
-            <TableCaption>View all accounts stats</TableCaption>
-            <Thead>
-              <Tr>
-                <Th>Address</Th>
-                <Th>Name</Th>
-                <Th>Balance</Th>
-                <Th>Burnt</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
+              Claim
+            </Button>
+          </Box>
+          <Box className='section'>
+            <Heading size='lg'>2 - Send $ROCKET</Heading>
+            <Select
+              placeholder='Choose an address'
+              onChange={(e) => setSendTo(e.target.value)}
+            >
               {rocket.addressesRaw.map((address) => (
-                <Tr>
-                  <Td className='monospace'>{address}</Td>
-                  <Td>{rocket.addresses[address].name}</Td>
-                  <Td>{weiToEther(rocket.addresses[address].balance)}</Td>
-                  <Td>{weiToEther(rocket.addresses[address].burnt)}</Td>
-                </Tr>
+                <option value={address} key={address}>
+                  {address} - {rocket.addresses[address].name}
+                </option>
               ))}
-            </Tbody>
-          </Table>
-        </Box>
-      </>
+            </Select>
+            <AmountPicker
+              onChange={setSendAmount}
+              value={sendAmount}
+              myBalance={rocket.balance}
+            />
+            <Button onClick={send}>Send !</Button>
+          </Box>
+          <Box className='section'>
+            <Heading size='lg'>3 - Burn some $ROCKET</Heading>
+            <p>
+              Have no friend ? You can burn your tokens to, maybe claim more ?
+            </p>
+
+            <AmountPicker
+              onChange={setBurnAmount}
+              value={burnAmount}
+              myBalance={rocket.balance}
+            />
+            <Button onClick={burn}>Burn !</Button>
+          </Box>
+          <Box className='section'>
+            <Heading size='lg'>4 - Holders</Heading>
+            <p>Here are some infos about holders</p>
+
+            <Table>
+              <TableCaption>View all accounts stats</TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>Address</Th>
+                  <Th>Name</Th>
+                  <Th>Balance</Th>
+                  <Th>Burnt</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {rocket.addressesRaw.map((address) => (
+                  <Tr>
+                    <Td className='monospace'>{address}</Td>
+                    <Td>{rocket.addresses[address].name}</Td>
+                    <Td>{weiToEther(rocket.addresses[address].balance)}</Td>
+                    <Td>{weiToEther(rocket.addresses[address].burnt)}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+        </>
+      )}
     </div>
   )
 }
